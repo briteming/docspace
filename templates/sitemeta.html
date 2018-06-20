@@ -1,0 +1,14 @@
+{% load cache %}
+{% cache 7200 site-metadata %}
+{% spaceless %}
+<section id="site-metadata" class="my-2 bg-transparent">
+  <div class="text-center mb-2 mt-3">
+    {%for meta in metadata%}
+    {%if meta.related_count%}
+      <a href="{%url meta.mark meta.pk%}" class="badge badge-pill badge-light text-muted mr-2 py-1 px-2">{{meta.key}}</a>
+    {%endif%}
+    {%endfor%}
+  </div>
+</section>
+{% endspaceless %}
+{% endcache %}

@@ -1,0 +1,158 @@
+{% spaceless %}
+{% load i18n static cache sitetags %}
+{% get_option 'sitename' as sitename %}
+{% get_option 'sitedescription' as sitedescription %}
+{% url 'index' as home_url %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="icon" href="{%static 'docspace/dist/img/cropped-calendar-icons-2-32x32.png'%}" sizes="32x32" />
+<link rel="icon" href="{%static 'docspace/dist/img/cropped-calendar-icons-2-32x32.png'%}cropped-calendar-icons-2-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="{%static 'docspace/dist/img/cropped-calendar-icons-2-180x180.png'%}" />
+<meta name="msapplication-TileImage" content="{%static 'docspace/dist/img/cropped-calendar-icons-2-270x270.png'%}" />
+<title>{%block title%} {{sitename|default:"Default Site Name"}} – {{sitedescription | default:"Default Site Description"}}{%endblock%}</title>
+<link rel="dns-prefetch" href="hm.baidu.com">
+<link rel="dns-prefetch" href="secure.gravatar.com">
+<link rel="stylesheet" href="{% static '/docspace/dist/css/bootstrap.min.css' %}">
+{%block extra-css%}{%endblock%}
+</head>
+<body>
+  <header id="site-header" class="py-2 py-sm-3 py-md-4 mb-3 d-print-none">
+    {%block site-header%}
+    <div class="col-md-8 offset-md-2">
+      <div class="d-flex flex-column flex-md-row align-items-center">
+        <a class="navbar-brand mr-md-auto pl-sm-0 text-dark" href="{%url 'index'%}"><b>{{sitename|default:"Default Django Site"}}</b></a>
+        <nav class="navbar navbar-expand navbar-light pr-sm-0">
+            <ul class="navbar-nav">
+              <li class="nav-item{%if request.path == home_url%} active{%endif%}">
+                <a class="nav-link" href="{%url 'index'%}">首页 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item{%if 'archives' in request.path%} active{%endif%}">
+                <a class="nav-link" href="{%url 'archives'%}">归档</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" target="_blank" href="{%url 'feed'%}">RSS</a>
+              </li>
+              {%if request.user.is_authenticated%}
+              <li class="nav-item">
+                <a class="nav-link">{{request.user}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{%url 'logout'%}">注销</a>
+              </li>
+              {%else%}
+              <li class="nav-item">
+                <a class="nav-link" href="{%url 'login'%}?next={{request.path}}">登录</a>
+              </li>
+              {%endif%}
+            </ul>
+        </nav>
+      </div>
+    </div>
+    {%endblock site-header%}
+  </header>
+
+  <section id="site-description" class="my-2 bg-white">
+    {%block site-description%}
+    <div class="alert border-light show px-0 my-0">
+      <div class="col-12 col-md-8 offset-md-2">
+        <div class="d-flex justify-content-between">
+          {%block site-title%}
+          <span class="text-muted">{{sitedescription | default:"Default Site Description."}}</span>
+          {%endblock site-title%}
+          <nav class="text-right d-none d-sm-block my-md-0">
+            {%if request.GET.search%}
+              <span class="badge badge-pill">查询 <b class="text-danger">{{request.GET.search}}</b> 找到<b class="text-danger"> {{object_list.count}} </b>个结果</span>
+            {%else%}
+              {%block article-metadata%}
+              {%endblock%}
+              {%if messages%}
+              {%for message in messages%}
+                <span class="badge badge-pill py-1 text-{% if message.tags %}{{ message.tags }}{% endif %}">{{message}}</span>
+              {%endfor%}
+              {%endif%}
+            {%endif%}
+          </nav>
+        </div>
+      </div>
+    </div>
+    {%endblock site-description%}
+  </section>
+
+  <main id="site-content" class="py-2 py-sm-3 py-md-4">
+    <div class="col-md-8 offset-md-2">
+    {%block site-content%}
+    {%for item in object_list%}
+    {%if item.post_type != 'page'%}
+    <div class="article-desc pb-3 mb-5 border-bottom border-light">
+      <div class="row">
+        <div class="col-lg-9">
+          <h3 class="pb-2"><a class="text-dark h5" href="{{item.get_absolute_url}}">{{item.title}}</a></h3>
+          <div class="article-desc">
+            <p>{{item.content|striptags|truncatechars_html:71}}</p>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div style="border-left: 3px solid #495057;" class="article-meta my-auto px-md-3 px-2 py-1 d-flex flex-lg-column flex-sm-row border-secondary">
+            <a href="{{item.get_absolute_url}}" rel="bookmark" class="pr-1 text-muted">
+              <time datetime="{{item.created}}">{{item.created|date}}</time>
+              <time class="updated d-none" datetime="{{item.modified}}">{{item.modified|date}}</time>
+            </a>
+            <span class="pr-1 px-xs-2 text-muted">阅读: {{item.views_num}}</span>
+            <a href="{{item.get_absolute_url}}#comments" rel="comments" class="pr-1 text-muted">
+                <span>评论: {{item.comment_count}}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%endif%}
+    {%endfor%}
+    {%endblock site-content%}
+    </div>
+  </main>
+
+  <section id="site-extra" class="my-2">
+      <div class="col-12 col-md-8 offset-md-2">
+        <div class="d-none d-sm-flex justify-content-center">
+          <form class="form-inline mt-2 mt-md-0" method="get" action="{%url 'index'%}">
+            <div class="form-group">
+              <div class="input-group">
+                <input class="form-control" {%if request.GET.search%}value="{{ request.GET.search }}"{%endif%} name="search" type="search" autocomplete="off" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        {%sitemeta%}
+      </div>
+  </section>
+
+  <footer id="site-footer" class="py-2 py-sm-3 py-md-4 d-print-none">
+      <div class="col-md-8 offset-md-2">
+        {%if request.path == home_url%}
+        {% cache 7200 site-links %}
+        <div class="py-3 mb-5 d-sm-flex d-none justify-content-center">
+          {%get_links as links%}
+          {%for link in links%}
+          <a class="badge badge-pill text-muted mr-2 p-1" target="{{link.target}}" {%if link.description%}title="{{link.description}}" {%endif%}href="{{link.url}}">{{link.name}}</a>
+          {%endfor%}
+        </div>
+        {% endcache %}
+        {%endif%}
+        <div class="my-3 mx-md-3 text-center">
+        <a href="#" class="badge badge-pill badge-light text-muted ml-2 p-2">回到顶部</a>
+        </div>
+      </div>
+  </footer>
+  {%block extra-js%}
+  {%endblock%}
+<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?9e9e09284b6a4605e584d98f6accf6b7";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script>
+<script>var HasOldLink = document.querySelector('a#oldlink.text-muted');if(HasOldLink){setTimeout("window.location.href = HasOldLink.href;",1000)};</script>
+</body>
+</html>
+{% endspaceless %}

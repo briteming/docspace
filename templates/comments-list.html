@@ -1,0 +1,34 @@
+{%load sitetags static%}
+<div class="pl-2 media mt-3">
+  {{comment.author_email|gravatar:'48,2'}}
+  <div class="media-body" id="comment-{{comment.id}}">
+    <div class="comment-metadata">
+        {%if comment.author_url%}
+        <a href="{{comment.author_url}}" target="_blank" class="mr-2 text-dark"><b>{{comment.author_name}}</b></a>
+        {%else%}
+        <b class="text-muted">{{comment.author_name}}</b>
+        {%endif%}
+      <span class="float-right text-muted d-none" style="font-size: 0.75rem;">举报</span>
+    </div>
+    <a href="#comment-{{comment.id}}" rel="bookmark" class="pr-1 text-muted">
+      <time datetime="{{comment.created}}">{{comment.created}}</time>
+    </a>
+  </div>
+</div>
+
+<div class="p-2 mb-3 mt-2 border-bottom border-light">
+  {%if comment.parent%}
+  <a class="text-muted" href="#comment-{{comment.parent_id}}">@{{comment.parent.author_name}}</a>
+  {%endif%}
+  <p class="font-weight-normal">{{comment.content}}</p>
+  <a href="javascript:void(0)" data-id="{{comment.id}}" data-action="reply" class="badge badge-light p-2 mr-2 text-muted">回复</a>
+  <a href="javascript:void(0)" data-id="{{comment.id}}" data-action="cancel" class="d-none float-right badge badge-light p-2 text-muted">取消回复</a>
+</div>
+
+{%if comment.children%}
+<div class="ml-1 ml-sm-2 ml-md-3 ml-lg-4 border-left border-light">
+{% for comment in comment.children%}
+  {% include 'comments-list.html'%}
+{%endfor%}
+</div>
+{%endif%}

@@ -1,0 +1,164 @@
+{% load i18n static options%}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>{%block title%}酷特尔 – 吃饭,睡觉,学习,工作,是你每天最不能忘记的事情。{%endblock%}</title>
+<link rel="stylesheet" href="{% static '/docspace/dist/css/bootstrap.min.css' %}">
+{%block extra-css%}{%endblock%}
+<style>
+#site-header form input {
+  background: transparent;
+  border: 0;
+  border-bottom:1px solid #ccc;
+  outline: none;
+  color: #f8f9fa;
+  text-align: center;
+  font-size: 1.175rem;
+}
+#site-header form input::-ms-input-placeholder {
+  text-align: center;
+  font-size: 1.175rem;
+}
+#site-header form input::-webkit-input-placeholder {
+  text-align: center;
+  font-size: 1.175rem;
+}
+</style>
+
+</head>
+<body>
+  <header id="site-header">
+    {%block site-header%}
+    <div class="text-center bg-dark d-print-none shadow-sm">
+      <div class="container-fluid">
+        <div class="col-md-10 offset-md-1">
+          <a class="nav-link text-white pt-3" href="{%url 'index'%}" style="font-size: 1.75rem;">
+            <b>D</b>oc <b>S</b>pace
+          </a>
+            <!--a class="nav-link text-white" href="{%url 'index'%}"><b>酷 特 尔</b></a-->
+            <!--a class="nav-link text-white" href="{%url 'index'%}"><b>D</b>oc <b>S</b>pace</a>
+          </h1-->
+          <form class="d-inline-flex w-75 my-sm-2" method="get" action="{%url 'index'%}">
+            <input class="w-100 mr-sm-2" {%if request.GET.search%}style="color: white;" value="{{ request.GET.search }}"{%endif%} name="search" type="search" autocomplete="off" placeholder="Search" aria-label="Search">
+            <!--i class="mt-1 text-white fa fa-search"></i-->
+          </form>
+          <div class="text-hide">吃饭, 睡觉, 学习, 工作, 是你每天最不能忘记的事情</div>
+          <div class="nav-scroller">
+            <nav class="nav py-0 d-flex justify-content-center">
+          <!--nav class="nav header-nav justify-content-between"-->
+            <a class="nav-link text-white" href="/archives/9">关于</a>
+            <a class="nav-link text-white" href="/archives/8">链接</a>
+            <a class="nav-link text-white" target="_blank" href="https://github.com/Wenvki">Github</a>
+          </nav>
+        </div>
+        </div>
+      </div>
+    </div>
+    {%endblock%}
+  </header>
+<main class="container-fluid mb-5 mt-3">
+  <div class="row">
+  {% block messages %}
+  {%if messages%}
+  <div class="messages col-md-8 offset-md-2">
+    {%for message in messages%}
+    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show">
+      <span>{{message}}</span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {%endfor%}
+  </div>
+  {%endif%}
+  {%endblock%}
+  {%block site-content%}
+    <div class="article-item col-md-8 offset-md-2">
+      {%if request.GET.search%}
+      <div class="alert alert-success alert-dismissible fade show">
+        <span>查询 <b class="text-danger">{{request.GET.search}}</b> </span>找到<span class="text-danger"> {{object_list.count}} </span>个结果
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {%endif%}
+      {%for item in object_list%}
+      {%if item.post_type != 'page'%}
+      <div class="article-desc py-3 p-sdm-3 border-bottom border-light">
+        <div class="row">
+<div class="col-lg-9 order-lg-{%cycle 1 2%}">
+<h3><a class="text-dark" title="{{item.title}}" href="{{item.get_absolute_url}}">{{item.title}}</a></h3>
+<div class="article-item-content" style="font-size: 1.025rem;">
+{{item.content|truncatechars:99|safe}}
+</div>
+</div>
+<div class="col-lg-3 order-lg-{%cycle 2 1%}">
+<div class="article-meta my-auto p-3 d-flex flex-md-column flex-sm-row text-{%cycle 'left' 'right'%}  bg-light border-{%cycle 'left' 'right'%} border-{%cycle 'secondary' 'warning' 'info'%}">
+  <a href="{{item.get_absolute_url}}" rel="bookmark" class="pr-1 text-muted">
+    <time datetime="{{item.created}}">{{item.created|date}}</time>
+    <time class="updated d-none" datetime="{{item.modified}}">{{item.modified|date}}</time>
+  </a>
+  <span class="pr-1 px-xs-2 text-muted">阅读: 999</span>
+  <a href="{{item.get_absolute_url}}#comments" rel="comments" class="pr-1 text-muted">
+  评论: {{item.comment_count}}
+  </a>
+</div>
+</div>
+</div>
+</div>
+{%endif%}
+{%endfor%}
+</div>
+{%endblock%}
+</div>
+</main>
+<footer class="container-fluid mb-5 mt-3 d-print-none">
+  <div class="col-md-8 offset-md-2">
+      <div class="row">
+        <div class="col-12 col-md">
+          <h5>xxx+yyy</h5>
+          <p>gbm</p>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Features</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Cool stuff</a></li>
+            <li><a class="text-muted" href="#">Random feature</a></li>
+            <li><a class="text-muted" href="#">Team feature</a></li>
+            <li><a class="text-muted" href="#">Stuff for developers</a></li>
+            <li><a class="text-muted" href="#">Another one</a></li>
+            <li><a class="text-muted" href="#">Last time</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Resource</a></li>
+            <li><a class="text-muted" href="#">Resource name</a></li>
+            <li><a class="text-muted" href="#">Another resource</a></li>
+            <li><a class="text-muted" href="#">Final resource</a></li>
+          </ul>
+        </div>
+        {%url 'index' as home_url%}{%if request.path == home_url%}
+        <div class="col-12 col-md">
+          <h5>Links</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">阿三</a></li>
+            <li><a class="text-muted" href="#">飞勾</a></li>
+            <li><a class="text-muted" href="#">十一</a></li>
+            <li><a class="text-muted" href="#">西喜</a></li>
+          </ul>
+        </div>
+        {%endif%}
+      </div>
+    </div>
+      <div class="text-center my-5 pb-3">
+        <a class="text-muted" href="#">回到顶部</a>
+      </div>
+    </footer>
+<script src="{% static '/docspace/dist/js/jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static '/docspace/dist/js/bootstrap.min.js' %}"></script>
+{%block extra-js%}{%endblock%}
+</body>
+</html>

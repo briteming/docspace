@@ -1,0 +1,47 @@
+{%load static sitetags%}
+<form id="comment-form" action="{{object.get_absolute_url}}" method="POST" class="form m-2 pt-3 border-top">
+{% csrf_token %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+<div class="form-row">
+  <div class="form-group col-10">
+    <div class="custom-control custom-checkbox mt-1">
+      <input type="checkbox" checked="checked" name="remember" class="custom-control-input" id="id_remember">
+      <label class="custom-control-label" for="id_remember">
+        <span>允许浏览器存储您的姓名、邮箱、网站用于下次访问网站发表评论。</span>
+      </label>
+    </div>
+  </div>
+  <div class="form-group col-2">
+    <span id="comment-gravatar" class="float-right">{{request.session.author_email|gravatar:'30,0'}}</span>
+  </div>
+</div>
+
+
+<div class="form-group">
+  <div class="input-group">
+    {{ form.content.errors }}
+    {{form.content}}
+    <div class="input-group-append">
+      <button type="submit" class="btn btn-outline-secondary btn-sm">发表评论</button>
+    </div>
+  </div>
+</div>
+
+<div id="comment-author-info" class="form-row{%if request.session.author_name and request.session.author_email%} d-none{%endif%}">
+  <div class="form-group col-md-4">
+      {{ form.author_name.errors }}
+      {{form.author_name}}
+  </div>
+  <div class="form-group col-md-4">
+    {{ form.author_email.errors }}
+    {{form.author_email}}
+  </div>
+  <div class="form-group col-md-4">
+    {{ form.author_url.errors }}
+    {{form.author_url}}
+  </div>
+</div>
+</form>
+<script src="{%static 'docspace/dist/js/comments.js'%}"></script>
