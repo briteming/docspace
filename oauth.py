@@ -16,9 +16,14 @@ else:
 
 from docspace.models import Metadata
 
-GITHUB_CLIENT_ID = getattr(settings, 'GITHUB_CLIENT_ID', None)
-GITHUB_CLIENT_SECRET = getattr(settings, 'GITHUB_CLIENT_SECRET', None)
-'''4529033a34be3e8ed521eed00d513a1e27b40554'''
+GITHUB_CLIENT_ID = getattr(
+    settings,
+    'GITHUB_CLIENT_ID',
+    '494c5dbc2ad26c59498e')
+GITHUB_CLIENT_SECRET = getattr(
+    settings,
+    'GITHUB_CLIENT_SECRET',
+    '4529033a34be3e8ed521eed00d513a1e27b40554')
 
 
 class OAuthView(View):
@@ -60,11 +65,8 @@ class OAuthView(View):
     def get_user_info(self, access_token):
         '''获取用户信息'''
         url = self.user_api + access_token
-        # 拿到access_token后调用api即可获得用户信息
         r = requests.get(url, timeout=5)
-        # 用户信息也是json文本
         user_info = r.json()
-        print(user_info)
         return user_info
 
     def get_success_url(self):
@@ -76,32 +78,22 @@ class OAuthView(View):
 
 class GitHubOAuthView(OAuthView):
     '''github账号认证视图'''
-    # 在具体类中定义相应的参数
     access_token_url = 'https://github.com/login/oauth/access_token'
     user_api = 'https://api.github.com/user?access_token='
-    client_id = getattr(settings, 'GITHUB_CLIENT_ID', '494c5dbc2ad26c59498e')
-    client_secret = getattr(
-        settings,
-        'GITHUB_CLIENT_SECRET',
-        '4529033a34be3e8ed521eed00d513a1e27b40554'
-        )
+    client_id = GITHUB_CLIENT_ID
+    client_secret = GITHUB_CLIENT_SECRET
 
     def authenticate(self, user_info):
-        '用户认证'
-        verify = Metadata.objects.filter(key='github', value=user_info['id'])
-        #user = User.objects.filter(profile__github_id=user_info['id'])
-        # 在数据库中检索GitHub id
-        # 如果有，则选择相应的用户登录
-        # 如果没有，则创建用户，然后再登录
+        '''用户认证'''
+        auth_name = user_info['login']
+        auth_id = user_info['id']
+        website = user_info['html_url']
+        verify = Metadata.objects.filter(key='github', value=auth_id)
         if not verify:
-            # 用户的模型见下文
-            # user_info里'login'为用户名，'id'为GitHub的id，'avatar_url'为用户头像的url
-            # 除此还有很多其他信息，如果想知道，直接print(user_info)
-            user = User.objects.create_user(user_info['login'], website=user_info['html_url'])
-            Metadata.objects.create(object_repr=user, key='github', value=user_info['id'])
+            user = User.objects.create_user(auth_name, website=website)
+            Metadata.objects.create(object_repr=user, key='github', value=auth_id)
         else:
             user = verify[0].object_repr
-        # 用login函数登录，logout函数注销
         login(self.request, user)
         return redirect(self.get_success_url())
 
@@ -114,7 +106,7 @@ class OAuthLoginView(LoginView):
         context = super(OAuthLoginView, self).get_context_data(**kwargs)
         if 'next' in self.request.GET:
             self.request.session['next'] = self.request.GET['next']
-        client_id = getattr(settings, 'GITHUB_CLIENT_ID', '494c5dbc2ad26c59498e')
+        client_id = GITHUB_CLIENT_ID
         authorize_url = 'https://github.com/login/oauth/authorize?client_id='
         context['github_oauth_url'] = authorize_url + '{}'.format(client_id)
         return context
