@@ -53,14 +53,7 @@ class ArticleNewForm(forms.ModelForm):
             'simditor-fullscreen.js', 'beautify-html.min.js', 
             'simditor-html.js', 'simditor-init.js'
         ]
-        
-        
-        js_prefix = settings.STATIC_URL + 'docspace/js/'
-        css = {
-            'all': tuple(
-                css_prefix + cfile for cfile in css_files
-                )
-            }
+        css = {'all': tuple(css_prefix + cfile for cfile in css_files)}
         js = tuple(js_prefix + url for url in js_files)
 
     class Meta:
