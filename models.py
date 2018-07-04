@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible, force_text
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
+from django.dispatch import receiver
 
 TABLE_PREFIX = getattr(settings, "DS_TABLE_PREFIX", "ds")
 
@@ -247,7 +248,8 @@ class Article(Created, Modified, Parent):
         max_length=128,
         verbose_name=u"标题",
         )
-    content = RichTextField(
+    #content = RichTextField(
+    content = models.TextField(
         null=True,
         blank=True,
         verbose_name=u"内容",
@@ -395,3 +397,12 @@ class Comment(Created, Parent):
     class Meta:
         db_table = '%s_comments' % TABLE_PREFIX
         verbose_name = verbose_name_plural = u"评论"
+
+@receiver(models.signals.post_save, sender=Comment)
+def update_article_comment_count(instance, **kwargs):
+    article = instance.article
+    _model = instance._meta.model
+    count = _model.objects.filter(approved='yes', article=article).count()
+    if article.comment_num != count:
+        article.comment_num = count
+        article.save()

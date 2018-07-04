@@ -1,0 +1,53 @@
+{% extends 'index.html' %}{% load i18n static cache sitetags%}
+{% get_option 'sitename' as sitename %}
+{%block title%}{{object.title}} – {{sitename|default:"Default Django Site"}}{%endblock%}
+{%block extra-css%}
+{{form.media.css}}
+<style>
+.simditor .simditor-body img {
+  cursor: pointer;
+  max-width: 99%;
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+  border: 0;
+}
+</style>
+{%endblock%}
+{%block site-title%}
+<span class="font-weight-bold">新建文章</span>
+{%endblock site-title%}
+{%block article-metadata%}
+  <span class="badge badge-pill text-muted mr-1 py-1 px-2">阅读 {{object.views_num}}</span>
+  {%if object.tags.all%}
+    {% for t in object.tags.all%}
+    <a href="{%url 'tag' t.pk%}" class="badge badge-pill badge-light text-muted ml-1 py-1 px-2">{{t}} </a>
+    {%endfor%}
+  {%endif%}
+{%endblock%}
+{%block site-content%}
+  <div class="article pb-3 mb-5 border-bottom border-light">
+    <div class="article-content mb-1 border-bottom border-light">
+      <form action="" method="POST" role="form" class="form-horizontal" id="{{meta.model_name}}-new">
+        {% csrf_token %}
+        {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+        {% endfor %}
+        
+        {% for field in form.visible_fields %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+          {{ field }}
+        </div>
+        {% endfor %}
+        <button type="submit" name="_saverlist" class="btn btn-info btn-sm mr-2">保存</button>
+        <button type="submit" name="_addanother" class="btn btn-info btn-sm mr-2">保存并新增</button>
+        <button type="submit" name="_saverview" class="btn btn-info btn-sm">保存并查看</button>
+      </form>
+    </div>
+  </div>
+{%endblock%}
+{%block extra-js%}
+{{form.media.js}}
+<!--script src="{%static 'docspace/js/app.js'%}"></script-->
+{%endblock%}

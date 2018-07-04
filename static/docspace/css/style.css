@@ -1,0 +1,17 @@
+#site-header form input {
+  background: transparent;
+  border: 0;
+  border-bottom:1px solid #ccc;
+  outline: none;
+  color: #f8f9fa;
+  text-align: center;
+  font-size: 1.175rem;
+}
+#site-header form input::-ms-input-placeholder {
+  text-align: center;
+  font-size: 1.175rem;
+}
+#site-header form input::-webkit-input-placeholder {
+  text-align: center;
+  font-size: 1.175rem;
+}

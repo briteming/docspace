@@ -21,11 +21,23 @@ from django.utils.text import slugify
 from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 
+from django.core.serializers.json import DjangoJSONEncoder
+#from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.utils.module_loading import import_string
+from django.utils.html import format_html
+from django.contrib.auth.views import redirect_to_login
+from django.views.generic.edit import CreateView, UpdateView
+
 from markdown import markdown
 
 # Create your views here.
+from docspace.mixins import BaseRequiredMixin
 from docspace.models import Article, Taxonomy
 from docspace.detail import DetailModelView
+
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -130,7 +142,7 @@ class IndexView(ListView):
         return '?%s' % urlencode(sorted(p.items()))
 
     def get_filter_by(self):
-        effective = {}
+        effective = {'status': 'published'}
         _fields = dict((f.name, f.attname) for f in self.model._meta.fields)
         for item in _fields:
             if item in self.request.GET:
@@ -195,3 +207,51 @@ def OldBlog(request, pk):
     #object_list = Article.objects.filter(post_type='post').order_by('-created')
     view = IndexView.as_view()
     return view(request, redirect=True, opk=int(pk))
+
+
+
+class NewModelView(BaseRequiredMixin, SuccessMessageMixin, CreateView):
+
+    def get_template_names(self):
+        return ["{0}_new.html".format(self.model_name), "_new.html"]
+
+    def get_permission_required(self):
+        self.permission_required = 'docspace.add_%s'%(self.model_name)
+        return super(NewModelView, self).get_permission_required()
+
+    def handle_no_permission(self):
+        msg = u"您没有新建 {0} 的权限.".format(self.model._meta.verbose_name)
+        messages.error(self.request, msg)
+        return super(NewModelView, self).handle_no_permission()
+
+    def get_success_message(self, cleaned_data):
+        self.success_message = u"成功创建了 {} {}".format(
+            self.verbose_name,  self.object
+            )
+        return self.success_message
+
+    def get_form_class(self):
+        name = self.model_name.capitalize()
+        try:
+            form_class_path = "docspace.forms.{}NewForm".format(name)
+            self.form_class = import_string(form_class_path)
+        except:
+            form_class_path = "docspace.forms.{}Form".format(name)
+            self.form_class = import_string(form_class_path)
+        return self.form_class
+
+    def get_form_kwargs(self):
+        kwargs = super(NewModelView, self).get_form_kwargs()
+        params = self.request.GET.dict()
+        kwargs.update(**params)
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super(NewModelView, self).form_valid(form)
+        #log_action(user=self.request.user, object=self.object, action_flag=u"新增")
+        return response
+
+class EditModelView(BaseRequiredMixin, SuccessMessageMixin, UpdateView):
+    pass

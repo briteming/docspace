@@ -83,14 +83,22 @@ class GitHubOAuthView(OAuthView):
     client_id = GITHUB_CLIENT_ID
     client_secret = GITHUB_CLIENT_SECRET
 
+    def get_email(self):
+        url = 'https://api.github.com/user/emails' + self.access_token
+        response = requests.get(url, timeout=5)
+        result = response.json()
+        return result[0]['email']
+
     def authenticate(self, user_info):
         '''用户认证'''
         auth_name = user_info['login']
         auth_id = user_info['id']
         website = user_info['html_url']
+        email = self.get_email()
+        print(222, user_info, email)
         verify = Metadata.objects.filter(key='github', value=auth_id)
         if not verify:
-            user = User.objects.create_user(auth_name, website=website)
+            user = User.objects.create_user(auth_name, website=website,email=email)
             Metadata.objects.create(object_repr=user, key='github', value=auth_id)
         else:
             user = verify[0].object_repr

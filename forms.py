@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.conf import settings
 #from django.contrib.auth.forms import UserCreationForm
-from docspace.models import Comment
+from docspace.models import Comment, Article
 
 '''
 class Select2Media(object):
@@ -45,6 +46,59 @@ class FormBaseMixin(Select2Media):
                     else:
                         field.queryset = field.queryset.filter(**effective)
 '''
+
+class ArticleNewForm(forms.ModelForm):
+    class Media:
+        """Media."""
+        css_list = [
+            'docspace/dist/styles/simditor.css',
+            'docspace/dist/styles/mobile.css',
+            'docspace/dist/styles/simditor-html.css',
+            'docspace/dist/styles/simditor-fullscreen.css',
+        ]
+
+        jquery_list = ['docspace/dist/scripts/jquery.min.js',
+                       'docspace/dist/scripts/module.js',
+                       'docspace/dist/scripts/mobilecheck.js',
+                       'docspace/dist/scripts/hotkeys.js',
+                       'docspace/dist/scripts/uploader.js',
+                       'docspace/dist/scripts/simditor.js',
+                       'docspace/dist/scripts/simditor-dropzone.js',
+                       'docspace/dist/scripts/simditor-autosave.js',
+                       'docspace/dist/scripts/simditor-fullscreen.js',
+                       'docspace/dist/scripts/beautify-html.min.js',
+                       'docspace/dist/scripts/simditor-html.js',
+                       'docspace/dist/scripts/simditor-init.js',
+                       ]
+
+        css = {
+            'all': tuple(
+                settings.STATIC_URL + url for url in css_list
+                )
+            }
+
+        js = tuple(settings.STATIC_URL + url for url in jquery_list)
+
+
+    class Meta:
+        model = Article
+        fields = ['title', 'content', 'category', 'tags']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(ArticleNewForm, self).__init__(*args, **kwargs)
+        for field_name in self.fields:
+            field = self.fields.get(field_name)
+            self.fields[field_name].widget.attrs.update({'class': "form-control"})
+            if isinstance(field, (forms.fields.SlugField, forms.fields.CharField)):
+                self.fields[field_name].widget.attrs.update({'autocomplete': "off"})
+            if isinstance(field, forms.fields.DateTimeField):
+                self.fields[field_name].widget.attrs.update({'data-datetime': "true"})
+            _MCF = forms.models.ModelChoiceField
+            _MMCF = forms.models.ModelMultipleChoiceField
+            if isinstance(field, (_MCF, _MMCF)):
+                field.queryset = field.queryset.filter()
+
 
 class CommentNewForm(forms.ModelForm):
     class Meta:

@@ -26,3 +26,30 @@ def spamcheck(obj, referrer):
         obj.approved = 'yes'
     obj.save()
     return obj.approved
+
+
+CODE_LANGUAGES = [
+    { "name": 'Bash', "value": 'bash' },
+    { "name": 'Python', "value": 'python' },
+    { "name": 'JavaScript', "value": 'js' },
+    { "name": 'HTML,XML', "value": 'html' },
+    { "name": 'JSON', "value": 'json' },
+    { "name": 'YAML', "value": 'yaml' },
+    { "name": 'Markdown', "value": 'markdown' },
+    { "name": 'CSS', "value": 'css' },
+    { "name": 'Visual Basic', "value": 'visual-basic' },
+    { "name": 'PowerShell', "value": 'powershell' },
+    { "name": 'Diff', "value": 'diff' },
+    { "name": 'Ruby', "value": 'ruby' },
+    { "name": 'SQL', "value": 'sql' },
+    { "name": 'PHP', "value": 'php' },
+    { "name": 'C#', "value": 'cs' },
+    { "name": 'C++', "value": 'c++' },
+    { "name": 'Erlang', "value": 'erlang' },
+    { "name": 'Less', "value": 'less' },
+    { "name": 'Sass', "value": 'sass' },
+    { "name": 'CoffeeScript', "value": 'coffeescript' },
+    { "name": 'Java', "value": 'java' },
+    { "name": 'Objective C', "value": 'oc' },
+    { "name": 'Perl', "value": 'parl' },
+]
