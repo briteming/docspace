@@ -2,51 +2,11 @@
 {% get_option 'sitename' as sitename %}
 {%block title%}{{object.title}} – {{sitename|default:"Default Django Site"}}{%endblock%}
 {%block extra-css%}
-<style>
-.article-content blockquote, blockquote {
-  border-left: 6px solid #ddd;
-  padding: 5px 0 5px 10px;
-  margin: 15px 0 15px 15px;
-}
-.simditor .simditor-body blockquote > :first-child, .editor-style blockquote > :first-child {
-  margin-top: 0;
-}
-.article-content code, .editor-style code {
-  display: inline-block;
-  padding: 0 4px;
-  margin: 0 5px;
-  background: #eeeeee;
-  border-radius: 3px;
-  font-size: 13px;
-  font-family: 'monaco', 'Consolas', "Liberation Mono", Courier, monospace;
-  word-break: break-all;
-  word-wrap: break-word;
-}
-.article-content pre, .editor-style pre {
-  padding: 10px 5px 10px 10px;
-  margin: 15px 0;
-  display: block;
-  line-height: 18px;
-  background: #F0F0F0;
-  border-radius: 3px;
-  font-size: 13px;
-  font-family: 'monaco', 'Consolas', "Liberation Mono", Courier, monospace;
-  white-space: pre;
-  word-wrap: normal;
-  overflow-x: auto;
-}
-.article-content pre code, .editor-style pre code {
-  display: block;
-  padding: 0;
-  margin: 0;
-  background: none;
-  border-radius: 0;
-}
-
-</style>
+<link rel="stylesheet" href="{% static '/docspace/css/prism.css' %}">
 {%endblock%}
+
 {%block site-title%}
-<span class="font-weight-bold">{{object.title}}</span>
+<span id="site-description-title" class="font-weight-bold mr-auto">{{object.title}}</span>
 {%endblock site-title%}
 {%block article-metadata%}
   <span class="badge badge-pill text-muted mr-1 py-1 px-2">阅读 {{object.views_num}}</span>
@@ -97,7 +57,7 @@
       <div id="comments-list" class="comments-list">
       {%if object.get_comments%}
       <div class="comment-title mb-3">
-        <b style="font-size: 1.175rem;">{{object.get_comments.count}}  条评论</b>
+        <b style="font-size: 1.175rem;">{{object.comment_count}}  条评论</b>
         <a class="text-muted float-right" href="#comment-form">添加评论</a>
       </div>
         {%for comment in object.get_comments%}
@@ -118,4 +78,5 @@
 {%endblock%}
 {%block extra-js%}
 <script src="{%static 'docspace/js/app.js'%}"></script>
+<script src="{%static 'docspace/js/prism.js'%}"></script>
 {%endblock%}

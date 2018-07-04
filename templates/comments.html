@@ -1,0 +1,45 @@
+{% extends 'index.html' %}{% load i18n static cache sitetags%}
+{% get_option 'sitename' as sitename %}
+{%block title%}评论 (共{{object_list.count}}条) – {{sitename|default:"Default Django Site"}}{%endblock%}
+{% spaceless %}
+{%block site-title%}
+<span class="font-weight-bold">文章归档 ( 共{{object_list.count}}条 )</span>
+{%endblock site-title%}
+{%block site-content%}
+  <div class="article pb-5">
+    <div class="article-header mb-3 border-bottom border-light">
+    {% regroup object_list by created.year as year_post_group %}
+      {% for year in year_post_group %}
+      <div class="ml-1 ml-sm-2 ml-md-3 ml-lg-4">
+        <div class="year-description mt-3">{{ year.grouper }} 年 ({{year.list | length}}篇)</div>
+        {% regroup year.list by created.month as month_post_group %}
+        <div class="ml-2 ml-sm-3 ml-md-4 ml-lg-5 border-left">
+          {% for month in month_post_group %}
+          <div class="ml-2 ml-sm-3 ml-md-4 ml-lg-5 mb-5">
+            <div class="month-description mt-3">{{ month.grouper }} 月 ({{month.list | length}}篇)</div>
+            {% for object in month.list %}
+              <div class="media mt-2 mb-3 py-2 border-top border-light">
+                {{object.author.email|gravatar:48}}
+                <div class="media-body">
+                  <div class="author-info">
+                    {%if object.author%}
+                    <a href="{% url 'author' object.author.id%}" class="text-muted">{{object.author}}</a>
+                    {%else%}
+                    <span class="text-muted">匿名</span>
+                    {%endif%}
+                    <span class="float-right text-muted d-none" style="font-size: 0.75rem; ">举报</span>
+                  </div>
+                  <a href="{{object.get_absolute_url}}" target="_blank" rel="bookmark" class="pr-1 text-dark" style="font-size:1.035rem;">
+                    <b>{{object.title}}</b>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{%endblock%}
+{% endspaceless %}

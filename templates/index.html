@@ -14,6 +14,7 @@
 <meta name="msapplication-TileImage" content="{%static 'docspace/img/cropped-calendar-icons-2-270x270.png'%}" />
 <title>{%block title%} {{sitename|default:"Default Site Name"}} – {{sitedescription | default:"Default Site Description"}}{%endblock%}</title>
 <link rel="dns-prefetch" href="hm.baidu.com">
+<link rel="dns-prefetch" href="blog.iloxp.com">
 <link rel="dns-prefetch" href="secure.gravatar.com">
 <link rel="stylesheet" href="{% static '/docspace/css/bootstrap.min.css' %}">
 {%block extra-css%}{%endblock%}
@@ -57,13 +58,13 @@
     {%endblock site-header%}
   </header>
 
-  <section id="site-description" class="my-2 bg-white">
+  <section id="site-description" class="mb-2 bg-white">
     {%block site-description%}
     <div class="alert border-light show px-0 my-0">
       <div class="col-12 col-md-8 offset-md-2">
         <div class="d-flex justify-content-between">
           {%block site-title%}
-          <span class="text-muted">{{sitedescription | default:"Default Site Description."}}</span>
+          <span id="site-description-title" class="text-muted mr-auto">{{sitedescription | default:"Default Site Description."}}</span>
           {%endblock site-title%}
           <nav class="text-right d-none d-sm-block my-md-0">
             {%if request.GET.search%}
@@ -105,7 +106,7 @@
             </a>
             <span class="pr-1 px-xs-2 text-muted">阅读: {{item.views_num}}</span>
             <a href="{{item.get_absolute_url}}#comments" rel="comments" class="pr-1 text-muted">
-                <span>评论: {{item.comment_count}}</span>
+                <span>评论: {{item.comment_num}}</span>
             </a>
           </div>
         </div>
@@ -147,9 +148,9 @@
         </div>
         {% endcache %}
         {%endif%}
-        <div class="my-3 mx-md-3 text-center">
+        <!--div class="my-3 mx-md-3 text-center">
         <a href="#" class="badge badge-pill badge-light text-muted ml-2 p-2">回到顶部</a>
-        </div>
+        </div-->
       </div>
   </footer>
   {%block extra-js%}
