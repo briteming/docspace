@@ -8,7 +8,7 @@ Installation
 
 ```bash
 git clone https://github.com/Wenvki/docspace.git
-mv `docspace` to your django `project` dir.
+Move `docspace` to your django project directory.
 ```
 
 **Add `docspace` to your `INSTALLED_APPS` setting.**
