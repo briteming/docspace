@@ -224,7 +224,7 @@ class ArticleManager(models.Manager):
         return super(ArticleManager, self).get_queryset().filter(post_type__in=['post', 'page'])
 
 
-from simditor.fields import RichTextField
+#from simditor.fields import RichTextField
 @python_2_unicode_compatible
 class Article(Created, Modified, Parent):
     """docstring for Article."""

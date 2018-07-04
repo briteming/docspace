@@ -4,21 +4,7 @@ from django.conf import settings
 #from django.contrib.auth.forms import UserCreationForm
 from docspace.models import Comment, Article
 
-
 '''
-class Select2Media(object):
-    class Media:
-        css = {
-            'all': (
-                '/static/idcops/select2/css/select2.min.css',
-                )
-            }
-        js = (
-            '/static/idcops/select2/js/select2.min.js',
-            '/static/idcops/select2/js/i18n/zh-CN.js'
-            )
-
-
 class FormBaseMixin(Select2Media):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -52,24 +38,24 @@ class ArticleNewForm(forms.ModelForm):
     class Media:
         """Media."""
         css_list = [
-            'docspace/dist/styles/simditor.css',
-            'docspace/dist/styles/mobile.css',
-            'docspace/dist/styles/simditor-html.css',
-            'docspace/dist/styles/simditor-fullscreen.css',
+            'docspace/css/simditor.css',
+            'docspace/css/mobile.css',
+            'docspace/css/simditor-html.css',
+            'docspace/css/simditor-fullscreen.css',
         ]
 
-        jquery_list = ['docspace/dist/scripts/jquery.min.js',
-                       'docspace/dist/scripts/module.js',
-                       'docspace/dist/scripts/mobilecheck.js',
-                       'docspace/dist/scripts/hotkeys.js',
-                       'docspace/dist/scripts/uploader.js',
-                       'docspace/dist/scripts/simditor.js',
-                       'docspace/dist/scripts/simditor-dropzone.js',
-                       'docspace/dist/scripts/simditor-autosave.js',
-                       'docspace/dist/scripts/simditor-fullscreen.js',
-                       'docspace/dist/scripts/beautify-html.min.js',
-                       'docspace/dist/scripts/simditor-html.js',
-                       'docspace/dist/scripts/simditor-init.js',
+        jquery_list = ['docspace/js/jquery.min.js',
+                       'docspace/js/module.js',
+                       'docspace/js/mobilecheck.js',
+                       'docspace/js/hotkeys.js',
+                       'docspace/js/uploader.js',
+                       'docspace/js/simditor.js',
+                       'docspace/js/simditor-dropzone.js',
+                       'docspace/js/simditor-autosave.js',
+                       'docspace/js/simditor-fullscreen.js',
+                       'docspace/js/beautify-html.min.js',
+                       'docspace/js/simditor-html.js',
+                       'docspace/js/simditor-init.js',
                        ]
 
         css = {
