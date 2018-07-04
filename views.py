@@ -42,7 +42,7 @@ from django.contrib.syndication.views import Feed
 from django.urls import reverse
 from django.utils.html import strip_tags
 
-from docspace.oauth import *
+from docspace.oauth import GitHubOAuthView, OAuthLoginView
 
 
 class LatestEntriesFeed(Feed):
@@ -80,7 +80,7 @@ def detail(request, pk):
 
 def author(request, pk):
     object_list = Article.objects.filter(post_type='post', author_id=pk).order_by('-created')
-    description_left = "作者：{}".format(request.user)
+    #description_left = "作者：{}".format(request.user)
     return render(request, 'index.html', {'object_list': object_list})
 
 def tag(request, pk):
