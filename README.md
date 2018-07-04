@@ -1,7 +1,7 @@
 # django-docspace
 django docspace blog
 
-> [demo](https://www.iloxp.com/) demo.
+> [demo](https://www.iloxp.com/)
 
 Installation
 ------------
