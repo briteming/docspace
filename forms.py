@@ -37,34 +37,23 @@ class FormBaseMixin(Select2Media):
 class ArticleNewForm(forms.ModelForm):
     class Media:
         """Media."""
-        css_list = [
-            'docspace/css/simditor.css',
-            'docspace/css/mobile.css',
-            'docspace/css/simditor-html.css',
-            'docspace/css/simditor-fullscreen.css',
+        css_files = [
+            'simditor.css', 'mobile.css',
+            'simditor-html.css', 'simditor-fullscreen.css'
+        ]
+        js_files = [
+            'jquery.min.js', 'module.js', 
+            'mobilecheck.js', 'hotkeys.js',
+            'uploader.js', 'simditor.js', 
+            'simditor-dropzone.js', 'simditor-autosave.js',
+            'simditor-fullscreen.js', 'beautify-html.min.js', 
+            'simditor-html.js', 'simditor-init.js'
         ]
 
-        jquery_list = ['docspace/js/jquery.min.js',
-                       'docspace/js/module.js',
-                       'docspace/js/mobilecheck.js',
-                       'docspace/js/hotkeys.js',
-                       'docspace/js/uploader.js',
-                       'docspace/js/simditor.js',
-                       'docspace/js/simditor-dropzone.js',
-                       'docspace/js/simditor-autosave.js',
-                       'docspace/js/simditor-fullscreen.js',
-                       'docspace/js/beautify-html.min.js',
-                       'docspace/js/simditor-html.js',
-                       'docspace/js/simditor-init.js',
-                       ]
-
-        css = {
-            'all': tuple(
-                settings.STATIC_URL + url for url in css_list
-                )
-            }
-
-        js = tuple(settings.STATIC_URL + url for url in jquery_list)
+        css_prefix = settings.STATIC_URL + 'docspace/css/'
+        js_prefix = settings.STATIC_URL + 'docspace/js/'
+        css = {'all': tuple(css_prefix + cfile for cfile in css_files)}
+        js = tuple(js_prefix + url for url in js_files)
 
 
     class Meta:
@@ -75,8 +64,11 @@ class ArticleNewForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super(ArticleNewForm, self).__init__(*args, **kwargs)
         for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update({
+                'class': "form-control",
+                'placeholder': self.fields[field_name].label,
+                })
             field = self.fields.get(field_name)
-            self.fields[field_name].widget.attrs.update({'class': "form-control"})
             if isinstance(field, (forms.fields.SlugField, forms.fields.CharField)):
                 self.fields[field_name].widget.attrs.update({'autocomplete': "off"})
             if isinstance(field, forms.fields.DateTimeField):
@@ -97,7 +89,6 @@ class CommentNewForm(forms.ModelForm):
         self.fields['parent'].widget = forms.HiddenInput()
         self.fields['content'].widget.attrs.update({'rows': 4})
         for field_name in self.fields:
-            field = self.fields.get(field_name)
             self.fields[field_name].widget.attrs.update({
                 'class': "form-control",
                 'placeholder': self.fields[field_name].label,
