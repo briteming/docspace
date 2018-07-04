@@ -15,11 +15,6 @@ from pykismet3 import Akismet
 from docspace.models import Article
 from django.urls import reverse
 from docspace.forms import CommentNewForm
-'''
-hasattr(settings, 'AKISMET_API_KEY')
-hasattr(settings, 'SITE_URL')
-hasattr(settings, 'CHECK_COMMENT_EMAIL')
-'''
 
 
 api_key = getattr(settings, 'AKISMET_API_KEY', 'd7719929047a')
@@ -76,15 +71,6 @@ class DetailModelView(SuccessMessageMixin, FormMixin, DetailView):
     form_class = CommentNewForm
 
     template_name = 'detail.html'
-
-    '''
-    def get_form_kwargs(self):
-        kwargs = super(DetailModelView, self).get_form_kwargs()
-        params = self.request.GET.dict()
-        kwargs.update(**params)
-        kwargs.update({'user': self.request.user})
-        return kwargs
-    '''
 
     def get_success_url(self):
         return reverse('detail', kwargs={'pk': self.object.pk})

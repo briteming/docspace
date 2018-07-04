@@ -9,3 +9,4 @@ PyMySQL==0.8.1
 pytz==2018.3
 redis==2.10.6
 requests==2.18.4
+

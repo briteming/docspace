@@ -7,7 +7,6 @@ from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
-from django.utils.encoding import force_text
 
 # Create your views here.
 from docspace.models import Option

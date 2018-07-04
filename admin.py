@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
+
 # Register your models here.
 
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 from django.views.generic import View, TemplateView
 from django.core.exceptions import PermissionDenied
@@ -7,6 +8,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
+
 
 if settings.AUTH_USER_MODEL:
     _label, _model = settings.AUTH_USER_MODEL.split('.')

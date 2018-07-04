@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
 from django.dispatch import receiver
 
+
 TABLE_PREFIX = getattr(settings, "DS_TABLE_PREFIX", "ds")
 
 # Create your models here.

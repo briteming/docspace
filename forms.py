@@ -4,6 +4,7 @@ from django.conf import settings
 #from django.contrib.auth.forms import UserCreationForm
 from docspace.models import Comment, Article
 
+
 '''
 class Select2Media(object):
     class Media:

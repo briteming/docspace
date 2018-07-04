@@ -19,8 +19,9 @@ urlpatterns = [
     path(r'category/<int:pk>/', views.category, name='category'),
     path(r'tag/<int:pk>/', views.tag, name='tag'),
     path(r'feed/', views.LatestEntriesFeed(), name='feed'),
-    path(r'simditor/', include('simditor.urls')),   # add this line
+    path(r'simditor/', include('simditor.urls')),
 ]
+
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

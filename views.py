@@ -92,11 +92,13 @@ def category(request, pk):
     return render(request, 'index.html', {'object_list': object_list})
 
 
+
 _QUERY = 'search'
 _RANGE = 'range'
 _ORDER = 'order'
 _PAGINATE = 'paginate_by'
 _ALL_VAL = 'all'
+
 
 class IndexView(ListView):
 

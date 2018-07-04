@@ -55,6 +55,7 @@ def gravatar(email, parse='40,3'):
     url = gravatar_url(email, size)
     return mark_safe('<img src="%s" class="mr-%d img-fluid rounded-circle" height="%d" width="%d">' % (url, mr, size, size))
 
+
 @register.simple_tag
 def get_option(key):
     try:

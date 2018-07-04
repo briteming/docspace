@@ -6,6 +6,7 @@ from django.conf import settings
 from docspace.models import Comment
 
 
+
 @receiver(signals.post_save, sender=Comment)
 def update_article_comment_count(instance, **kwargs):
     article = instance.article
