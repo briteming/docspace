@@ -4,6 +4,10 @@ from django.conf import settings
 #from django.contrib.auth.forms import UserCreationForm
 from docspace.models import Comment, Article
 
+
+css_prefix = settings.STATIC_URL + 'docspace/css/'
+js_prefix = settings.STATIC_URL + 'docspace/js/'
+
 '''
 class FormBaseMixin(Select2Media):
     def __init__(self, *args, **kwargs):
@@ -49,12 +53,15 @@ class ArticleNewForm(forms.ModelForm):
             'simditor-fullscreen.js', 'beautify-html.min.js', 
             'simditor-html.js', 'simditor-init.js'
         ]
-
-        css_prefix = settings.STATIC_URL + 'docspace/css/'
+        
+        
         js_prefix = settings.STATIC_URL + 'docspace/js/'
-        css = {'all': tuple(css_prefix + cfile for cfile in css_files)}
+        css = {
+            'all': tuple(
+                css_prefix + cfile for cfile in css_files
+                )
+            }
         js = tuple(js_prefix + url for url in js_files)
-
 
     class Meta:
         model = Article
