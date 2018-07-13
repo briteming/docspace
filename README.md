@@ -1,12 +1,8 @@
 # django-docspace
 django docspace blog
 
-`Blog Functional：`
->
-*评论*
-*用户*
 
-> [demo](https://www.iloxp.com/)
+[demo](https://www.iloxp.com/)
 
 Installation
 ------------
