@@ -21,11 +21,11 @@ from docspace.models import Metadata
 GITHUB_CLIENT_ID = getattr(
     settings,
     'GITHUB_CLIENT_ID',
-    '494c5dbc2ad26c59498e')
+    '')
 GITHUB_CLIENT_SECRET = getattr(
     settings,
     'GITHUB_CLIENT_SECRET',
-    '4529033a34be3e8ed521eed00d513a1e27b40554')
+    '')
 
 
 class OAuthView(View):
